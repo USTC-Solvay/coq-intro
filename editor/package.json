@@ -1,0 +1,12 @@
+{
+	"scripts": {
+		"dev": "serve -l 11451"
+	},
+	"dependencies": {
+		"codemirror": "^5",
+		"codemirror-theme-vars": "^0.1.2",
+		"jscoq": "0.16",
+		"prism-theme-vars": "^0.2.4",
+		"serve": "^14.2.1"
+	}
+}

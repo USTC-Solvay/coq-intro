@@ -1,0 +1,19 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "slidev build",
+    "dev": "slidev --open",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.48.3",
+    "@slidev/types": "^0.48.3",
+    "@slidev/theme-seriph": "latest",
+    "lz-string": "^1.5.0",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.29",
+    "vite": "^5.1.6"
+  }
+}

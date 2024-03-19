@@ -1,0 +1,124 @@
+diff --git a/ui-css/coq-dark.css b/ui-css/coq-dark.css
+index 816e08c8f409c8c275b35be4db9b3fcbd3442b97..12e5f77bcddc6efc1a82e7f8405af938a660a49c 100644
+--- a/ui-css/coq-dark.css
++++ b/ui-css/coq-dark.css
+@@ -89,34 +89,34 @@
+ /*.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background-color: #000; }*/
+ /*.CodeMirror { color: #fff; }*/
+ 
+-.cm-s-blackboard .CodeMirror-dialog,
++.CodeMirror-dialog,
+ .cm-s-darcula .CodeMirror-dialog {
+   background: #333;
+   border-bottom: 1px solid #999;
+   box-shadow: 0 1px 4px #666;
+ }
+ 
+-.cm-s-blackboard .CodeMirror-dialog a.dialog-link,
++.CodeMirror-dialog a.dialog-link,
+ .cm-s-darcula .CodeMirror-dialog a.dialog-link {
+   color: #bbf;
+ }
+ 
+-.cm-s-blackboard .CodeMirror-gutters {
++.CodeMirror-gutters {
+   background: #000;
+   border-right: 1px solid #272727;
+ }
+ 
+-.cm-s-blackboard .coq-eval-ok,
++.coq-eval-ok,
+ .cm-s-darcula .coq-eval-ok {
+     background-color: #483D8B;
+ }
+ 
+-.cm-s-blackboard .coq-eval-pending,
++.coq-eval-pending,
+ .cm-s-darcula .coq-eval-pending {
+   background-color: #0a69a0;
+ }
+ 
+-.cm-s-blackboard .coq-eval-failed,
++.coq-eval-failed,
+ .cm-s-darcula .coq-eval-failed {
+     background-color: #aa0000;
+ }
+diff --git a/ui-css/coq-light.css b/ui-css/coq-light.css
+index addbaf42bc0a1b57104bc9d700598ff2c9be0c6e..658424203e5552ad39a6d2f1c9a5a7120bac0dad 100644
+--- a/ui-css/coq-light.css
++++ b/ui-css/coq-light.css
+@@ -51,29 +51,29 @@ body.jscoq-main #document {
+ 
+ /* Coq settings */
+ 
+-.coq-eval-ok {
++.jscoq-theme-light .coq-eval-ok {
+   background-color: #ddd;
+ }
+ 
+-.coq-eval-ok.coq-highlight {
++.jscoq-theme-light .coq-eval-ok.coq-highlight {
+   background-color: #ebeebd;
+ }
+   
+-.coq-eval-pending {
++.jscoq-theme-light .coq-eval-pending {
+   background-color: #fc6;
+ }
+ 
+-.coq-eval-failed {
++.jscoq-theme-light .coq-eval-failed {
+   background-color: rgba(255, 00, 50, 0.2);
+ }
+ 
+-.coq-eval-ok.CodeMirror-selectedtext,
+-.coq-eval-pending.CodeMirror-selectedtext,
+-.coq-eval-failed.CodeMirror-selectedtext {
++.jscoq-theme-light .coq-eval-ok.CodeMirror-selectedtext,
++.jscoq-theme-light .coq-eval-pending.CodeMirror-selectedtext,
++.jscoq-theme-light .coq-eval-failed.CodeMirror-selectedtext {
+   background-color: none;
+ }
+ 
+-.coq-eval-ok.coq-highlight.CodeMirror-selectedtext {
++.jscoq-theme-light .coq-eval-ok.coq-highlight.CodeMirror-selectedtext {
+   background-color: #bbe; 
+ }
+ 
+diff --git a/ui-js/cm-provider.js b/ui-js/cm-provider.js
+index 03bf4b2394cbc3b7d00c0807e360117641eb564b..d11925323ff892f405ab7c76040b87e30edd950e 100644
+--- a/ui-js/cm-provider.js
++++ b/ui-js/cm-provider.js
+@@ -67,7 +67,7 @@ export class CmCoqProvider {
+         var cmOpts = /** @type {CodeMirror.EditorConfiguration} */ (
+             { mode : { name : "coq",
+                        singleLineStringErrors : false },
+-              lineNumbers       : true,
++              lineNumbers       : false,
+               indentUnit        : 2,
+               tabSize           : 2,
+               indentWithTabs    : false,
+@@ -75,7 +75,9 @@ export class CmCoqProvider {
+               styleSelectedText : true,
+               dragDrop          : false, /* handled by CoqManager */
+               keyMap            : "jscoq",
+-              className         : "jscoq"
++              className         : "jscoq",
++              lineWrapping      : true,
++              theme             : "vars"
+             });
+ 
+         if (options)
+diff --git a/ui-js/coq-manager.js b/ui-js/coq-manager.js
+index 5ccc28e10fdee414e2ebacbcdb2323da01303d57..781bf0d389e0f8755aa6fbf35928d7f390ddfab8 100644
+--- a/ui-js/coq-manager.js
++++ b/ui-js/coq-manager.js
+@@ -659,7 +659,7 @@ export class CoqManager {
+             };
+ 
+         for (let pkg of this.options.init_import || []) {
+-            doc_opts.lib_init.push(PKG_ALIASES[pkg] || pkg.split('.'));
++            doc_opts.lib_init.push(PKG_ALIASES[pkg] || pkg);
+         }
+ 
+         this.coq.init(init_opts, doc_opts);

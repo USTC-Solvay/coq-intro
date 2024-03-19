@@ -1,0 +1,15 @@
+{
+  "name": "@kermanx/solvay-coq",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -C ./slides run build",
+    "export": "pnpm -C ./slides run export"
+  },
+	"pnpm": {
+		"patchedDependencies": {
+			"jscoq@0.16.0": "patches/jscoq@0.16.0.patch"
+		}
+	}
+}
