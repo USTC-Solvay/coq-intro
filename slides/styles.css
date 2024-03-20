@@ -1,0 +1,14 @@
+.tatics li {
+  height: 19px;
+  list-style-type: circle;
+}
+.tatics li > span {
+  font-family: KaTeX_Main,Times New Roman,serif;
+}
+.tatics li > span:nth-child(1) {
+  margin-right: 3px;
+  padding: 0 5px;
+  border: 1px solid #AAA;
+  border-radius: 3px;
+  background-color: rgba(255 255 255 / .1);
+}

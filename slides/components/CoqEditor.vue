@@ -10,6 +10,10 @@ const props = defineProps({
 
 const replaceMap = {
   '∀': 'forall',
+  '→': '->',
+  '×': '*',
+  '∧': '/\\',
+  '∨': '\\/',
 }
 
 const code = computed(() => {
@@ -28,14 +32,14 @@ const style = computed(() => {
   const lineNum = code.value.split('\n').length
   return {
     width: '100%',
-    height: `${lineNum * 16.66666 + 20}px`,
+    height: `${lineNum * 16.66666 + 30}px`,
   }
 })
 </script>
 
 <template>
   <RenderWhen context="main">
-    <iframe :src="url" frameborder="0" :style />
+    <iframe :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" />
     <template #fallback>
       <pre :style="style" class="overflow-y-auto">{{ code }}</pre>
     </template>
