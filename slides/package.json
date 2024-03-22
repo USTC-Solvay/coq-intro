@@ -7,13 +7,14 @@
   },
   "dependencies": {
     "@slidev/cli": "^0.48.3",
-    "@slidev/types": "^0.48.3",
     "@slidev/theme-seriph": "latest",
+    "@slidev/types": "^0.48.3",
     "lz-string": "^1.5.0",
     "vue": "^3.4.21"
   },
   "devDependencies": {
     "@types/node": "^20.11.29",
+    "playwright-chromium": "^1.42.1",
     "vite": "^5.1.6"
   }
 }

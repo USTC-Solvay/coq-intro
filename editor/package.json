@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"dev": "serve -l 11451"
+		"dev": "pnpm vite preview --outDir . --port 11451 --strictPort"
 	},
 	"dependencies": {
 		"codemirror": "^5",
@@ -8,5 +8,8 @@
 		"jscoq": "0.16",
 		"prism-theme-vars": "^0.2.4",
 		"serve": "^14.2.1"
+	},
+	"devDependencies": {
+		"vite": "^5.2.2"
 	}
 }

@@ -151,11 +151,14 @@
       prelude: true,
       implicit_libs: true,
       editor: { mode: { 'company-coq': true }, keyMap: 'default' },
-      init_pkgs: ['init'],
+      init_pkgs: ['init','coq-base'],
       all_pkgs: ['coq'],
       theme: 'dark',
       init_import: [
-        'Coq.Init.Nat'
+        'Coq.Init.Nat',
+        'Coq.Init.Logic',
+        'Coq.Classes.RelationClasses',
+        'Coq.Bool.Bool',
       ]
     };
 

@@ -5,3 +5,4 @@ dist
 .remote-assets
 components.d.ts
 .vite-inspect
+/slides/*.pdf

@@ -12,3 +12,10 @@
   border-radius: 3px;
   background-color: rgba(255 255 255 / .1);
 }
+.code-lg .shiki {
+  font-size: 0.8em !important;
+  line-height: 1.4em !important;
+}
+:root {
+  --slidev-theme-primary: #7dA3B2 !important;
+}

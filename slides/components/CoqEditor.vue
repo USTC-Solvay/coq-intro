@@ -14,6 +14,10 @@ const replaceMap = {
   '×': '*',
   '∧': '/\\',
   '∨': '\\/',
+  '¬': '~',
+  '⇒': '=>',
+  '↔': '<->',
+  '≠': '<>',
 }
 
 const code = computed(() => {
@@ -35,11 +39,21 @@ const style = computed(() => {
     height: `${lineNum * 16.66666 + 30}px`,
   }
 })
+
+const loaded = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    loaded.value = true
+  }, 3000);
+})
 </script>
 
 <template>
   <RenderWhen context="main">
     <iframe :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" />
+    <div data-waitfor=".loaded">
+      <div class=".loaded" v-show="loaded"/>
+    </div>
     <template #fallback>
       <pre :style="style" class="overflow-y-auto">{{ code }}</pre>
     </template>

@@ -6,6 +6,7 @@ export default defineShikiSetup((): ShikiSetupReturn => {
   return {
     langs: [
       CoqLang,
+      'c',
     ],
   } as any
 })

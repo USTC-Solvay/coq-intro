@@ -475,7 +475,7 @@ Qed.
 
 ---
 
-# Formal v.s. Informal Proof
+# Formal vs. Informal Proof
 
 "Informal proofs are algorithms; formal proofs are code."
 
@@ -547,7 +547,7 @@ Qed.
 
 # Skipped Chapters {.!text-gray-300}
 
-限于篇幅，更加接近函数式而非数学证明的内容将被略过 {.!text-gray-400.!op100}
+限于篇幅，更加接近函数式编程而非数学证明的内容将被略过 {.!text-gray-400.!op100}
 
 <div text-gray-300>
 
@@ -558,6 +558,10 @@ Qed.
 - Polymorphism and Higher-Order Functions &nbsp; (Poly)
 
   多态和高阶函数
+
+- Total and Partial Maps  &nbsp; (Maps)
+
+  函数式编程下的映射 / 表
 
 </div>
 
@@ -722,19 +726,572 @@ Proof.
 Qed.
 ```
 
-<br/>
-
 ```coq editor
-Example and_example' : 3 + 4 = 7 ∧ 2 × 2 = 4.
+Theorem or_commut : ∀ P Q : Prop,
+  P ∨ Q → Q ∨ P.
 Proof.
-  apply conj.
-  - (* 3 + 4 = 7 *)
-    reflexivity.
-  - (* 2 + 2 = 4 *)
-    reflexivity.
+  intros P Q [HP | HQ].
+  - (* HP *)
+    right.
+    apply HP.
+  - (* HQ *)
+    left.
+    apply HQ.
 Qed.
 ```
 
 ---
 
+# Falsehood and Negation
+
+怎样描述命题为假？
+
+$$ {hide|all}
+\urcorner P \iff ∀ Q, \space P → Q
+$$
+
+$$ {hide|all}
+\urcorner P \iff P → \operatorname{False}
+$$
+
+<div v-click>
+
+```coq
+Definition not (P:Prop) := P → False.
+```
+
+##### Some proofs:
+
+</div>
+<div v-show="$clicks === 4">
+
+```coq editor
+Theorem not_False :
+  ¬ False.
+```
+
+</div>
+<div v-click="'+2'" v-show="$clicks <= 5">
+
+```coq editor
+Theorem not_False :
+  ¬ False.
+Proof.
+  unfold not.
+  intros H.
+  destruct H.
+Qed.
+```
+
+</div>
+<div v-show="$clicks === 6">
+
+```coq editor
+Theorem not_implies_our_not : ∀ (P:Prop),
+  ¬ P → (∀ (Q:Prop), P → Q).
+```
+
+</div>
+<div v-click="'+2'">
+
+```coq editor
+Theorem not_implies_our_not : ∀ (P:Prop),
+  ¬ P → (∀ (Q:Prop), P → Q).
+Proof.
+  intros P H Q HP. (* So many! *)
+  unfold not in H.
+  apply H in HP.
+  destruct HP.
+Qed.
+```
+
+</div>
+
+---
+
 # What is $\bold{\operatorname{False}}$
+
+And why we can `destruct` it.
+
+```coq editor
+Theorem destruct_False : ∀ P : Prop,
+  False → P.
+Proof.
+  intros H F.
+  destruct F.
+Qed.
+```
+
+<div v-click mt-8 w-110 ml-50 text-center>
+
+```coq {*}{class:'!children:text-2xl'}
+Inductive False : Prop :=.
+```
+
+</div>
+
+<div v-click text-2xl>
+
+$$
+\operatorname{False} \overset{?}{\iff} \text{false}
+$$
+
+</div>
+
+---
+
+
+# Skipped Chapters {.!text-gray-300}
+
+
+限于篇幅，以下内容将被略过 {.!text-gray-400.!op100}
+
+<div text-gray-300>
+
+- $\text{True}$ 和 $\text{I}$
+
+  ```coq
+  Lemma True_is_true : True.
+  Proof. apply I. Qed.
+  ```
+
+- 当且仅当
+
+  ```coq
+  Definition iff (P Q : Prop) := (P → Q) ∧ (Q → P).
+  ```
+
+- 存在量词
+
+  ```coq
+  Definition Even x := ∃ n : nat, x = double n.
+  ```
+
+- $\forall x, f(x) = g(x) \space \Rightarrow \space f = g$
+
+  ```coq
+  Axiom functional_extensionality : ∀ {X Y: Type} {f g: X → Y},
+      (∀ (x:X), f x = g x) → f = g.
+  ```
+
+</div>
+
+---
+
+# Classical vs. Constructive Logic
+
+Coq 的逻辑是**构造性**的。非构造性的定理需要以公理形式引入。
+
+#### 排中律
+
+<div v-mark.cross.red>
+
+```coq editor
+Theorem excluded_middle : ∀ P:Prop,
+  P ∨ ¬ P.
+Proof.
+  intros P.
+  left.
+Abort.
+```
+
+</div>
+
+<div v-click>
+
+
+</div>
+
+---
+
+# Classical vs. Constructive Logic
+
+“有限制的排中律” [√]{.text-green.font-semibold}
+
+<div>
+
+```coq editor
+Theorem restricted_excluded_middle : ∀ P b,
+  (P ↔ b = true) → P ∨ ¬ P.
+Proof.
+  intros P [] [H1 H2].
+  - left. apply H2. reflexivity.
+  - right. unfold not. intros contra.
+    apply H1 in contra. discriminate contra.
+Qed.
+
+(* ignore this *) Axiom eqb_eq : ∀ n1 n2 : nat,
+  n1 =? n2 = true ↔ n1 = n2.
+
+Theorem restricted_excluded_middle_eq : ∀ (n m : nat),
+  n = m ∨ n ≠ m.
+Proof.
+  intros n m.
+  apply (restricted_excluded_middle (n = m) (n =? m)).
+  symmetry.
+  apply eqb_eq.
+Qed.
+```
+
+</div>
+
+---
+
+# Classical vs. Constructive Logic
+
+与排中律等价的公理
+
+<div class="!children:children:text-[15px] !children:mb-2">
+
+```coq
+Definition excluded_middle := ∀ P:Prop,
+  P ∨ ¬ P.
+```
+
+```coq
+Definition peirce := ∀ P Q: Prop,
+  ((P → Q) → P) → P.
+```
+
+```coq
+Definition double_negation_elimination := ∀ P:Prop,
+  ~~P → P.
+```
+
+```coq
+Definition de_morgan_not_and_not := ∀ P Q:Prop,
+  ~(~P ∧ ¬Q) → P ∨ Q.
+```
+
+```coq
+Definition implies_to_or := ∀ P Q:Prop,
+  (P → Q) → (¬P ∨ Q).
+```
+
+</div>
+
+---
+
+# 递归无处不在
+
+递归的类型、递归的定义、递归的证明
+
+```coq
+Inductive nat : Type :=
+  | O
+  | S (n : nat).
+```
+
+```coq
+Fixpoint even (n:nat) : bool :=
+  match n with
+  | O ⇒ true
+  | S O ⇒ false
+  | S (S n') ⇒ even n'
+  end.
+```
+
+```coq
+Theorem even_S : ∀ n:nat,
+  even (S n) = negb (even n).
+Proof.
+  intros n.
+  induction n as [| n' IHn'].
+  - reflexivity.
+  - destruct n'.
+    * reflexivity.
+    * rewrite IHn'. rewrite negb_involutive. reflexivity.
+Qed.
+```
+
+---
+
+# 递归无处不在
+
+其实还有递归的命题
+
+```coq {*}{class:'!children:text-lg !mb-5'}
+Inductive ev : nat → Prop :=
+  | ev_0                       : ev 0
+  | ev_SS (n : nat) (H : ev n) : ev (S (S n)).
+```
+
+<div v-if="$clicks < 1">
+
+```coq {*}{class:'!children:text-lg'}
+Inductive nat : Type :=
+  | O
+  | S (n : nat).
+```
+
+</div>
+<div v-if="$clicks >= 1">
+
+```coq {*}{class:'!children:text-lg'}
+Inductive nat : Type :=
+  | O                          : nat
+  | S (n : nat)                : nat.
+```
+
+</div>
+<div v-click="'+2'" text-2xl ml-20 mt-10>
+
+同一种语句!!! [(后面会用到)]{.pl-6.text-xl.op60.text-green-300}
+
+</div>
+
+---
+
+# 递归的命题
+
+##### 以 $\text{ev}$ 为例
+
+```coq editor
+Inductive ev : nat → Prop :=
+  | ev_0                : ev 0
+  | ev_SS (n : nat) (H : ev n)  : ev (S (S n)).
+
+Theorem ev_4 : ev 4.
+Proof.
+  apply ev_SS.
+  apply (ev_SS 0).  (* 柯里化! *)
+  apply ev_0.
+Qed.
+
+Theorem ev_4' : ev 4.
+Proof.
+  apply (ev_SS 2 (ev_SS 0 ev_0)).
+Qed.
+```
+
+<br/>
+
+##### 以 $\text{le}$ 为例
+
+```coq
+Inductive le : nat → nat → Prop :=
+  | le_n (n : nat)                : le n n
+  | le_S (n m : nat) (H : le n m) : le n (S m).
+```
+
+---
+
+# Progrmming [in Coq]{.op70.text-xl} [&]{.text-white.op70} Propositions [in Coq]{.op70.text-xl}
+
+仅仅是记号上的巧合？ {.text-2xl}
+
+
+
+<!--
+> "Algorithms are the computational content of proofs." (Robert Harper) {.text-center}
+-->
+
+<div class="p-10 pr-25">
+<div float-left>
+<div class="w-50 h-20 text-2xl text-center leading-18" border="2 gray-500 rounded">
+programming
+</div>
+<div v-click="1">
+
+<span v-mark.orange.box="2">Inductive</span> data types: {.!-mb-2.text-xl}
+
+&emsp; `nat` / `bool` / `list` / ...
+
+<span v-mark.orange.box="2">Inductive</span> functions: {.!-mb-2.text-xl}
+
+&emsp; `plus` / `mult` / `app` / ...
+
+</div>
+</div>
+
+<div float-right dir-rtl>
+<div class="w-50 h-20 text-2xl text-center leading-18" border="2 gray-500 rounded">
+proving
+</div>
+<div v-click="1">
+
+<span v-mark.orange.box="2">Inductive</span> propositions: {.!-mb-2.text-xl}
+
+&emsp; `ev` / `le` / ...
+
+<span v-mark.orange.box="2">Inductive</span> tatics: {.!-mb-2.text-xl}
+
+&emsp; `Inductive.` / ...
+
+</div>
+</div>
+
+<div v-click="1" ml-69 mt-40 w-40 v-mark.orange.box="2">
+
+`Induction` 关键字
+
+`→` 运算符
+
+</div>
+
+<div absolute left-0 right-0 top-10 bottom-0>
+<div absolute left-80 top-40 w-70 h-0 v-mark.orange="{at:3, strokeWidth: 5}" />
+<div absolute left-80 top-45 w-70 h-0 v-mark.orange="{at:3, strokeWidth: 5}" />
+<div absolute left-0 right-0 top-38 h-10 overflow-hidden>
+<div absolute left-103 class="-top-15" w-37 h-37 rotate-45>
+<div absolute inset-0 v-mark.orange.box="{at:3, strokeWidth: 5}" />
+</div>
+</div>
+<div absolute left-96 top-50 text-orange text-xl v-click="3" delay-300>
+柯里-霍华德同构
+</div>
+</div>
+
+</div>
+
+---
+
+# Coq 中的“证明”是什么？ {.text-xl}
+
+<div />
+<div class="code-lg">
+
+````md magic-move
+```coq {*}
+Theorem example_proof: ∀ n,
+  (∀ m, m×n = 0) → n = 0.
+Proof.
+  ......
+Qed.
+```
+```coq {*}
+Theorem example_proof: (n: nat) →
+  ((m: nat) → m×n = 0) → n = 0.
+Proof.
+  ......
+Qed.
+```
+```coq {*}
+Theorem example_proof: (n: nat) →
+  ((m: nat) → (H: m×n = 0)) → (Target: n = 0).
+Proof.
+  ......
+Qed.
+```
+````
+
+<div v-show="$clicks >= 3">
+
+假设是 C 语言：{.!-mb-1}
+
+````md magic-move {at:'+2'}
+```c {*}
+??? example_proof(??? n, ??? H) {
+  ......
+}
+```
+```c {*}
+n_is_0 example_proof(n n, forall_m_mxn_is_0 H) {
+  ......
+}
+```
+````
+
+</div>
+</div>
+
+<div v-click text-4xl text-primary ml-8 mt-8>
+
+Proof in <span font-mono>Coq</span>: <span op80 text-2xl>Building a</span> <span v-mark.white.underline="6">tree of evidence</span>!
+
+</div>
+
+<div v-click text-3xl ml-100>
+
+↳ "`Proof Object`"
+
+</div>
+
+---
+
+# The "`Proof Object`" is a [data structure]{.underline}
+
+<div />
+
+##### 重温一下 `ev` 的定义：
+
+```coq
+Inductive ev : nat → Prop :=
+  | ev_0                       : ev 0
+  | ev_SS (n : nat) (H : ev n) : ev (S (S n)).
+```
+
+Question：证据 [(evidence)]{.text-sm} 是数据，那么命题 [(propositions)]{.text-sm}是什么？
+
+<div v-click>
+
+Answer：They are **types**!
+
+</div>
+<div v-click mt-6>
+
+### <span text-primary>"`:`" 符号的含义:</span>
+
+| `A : B` | 例子 | 对于 `ev_0 : ev 0` 的解释 |
+| --- | --- | --- |
+| A 的类型是 B | `n : nat` | `ev_0` 的类型是 `ev 0` |
+| A 的证据是 B | `H : ev n` | `ev_0` 的证据是 `ev 0` |
+
+</div>
+
+---
+
+# 类型的“层级”
+
+类型的类型的类型的类型的类型的类型的类型的类型？？？？？？？🤯🥵🤯🥵🤯🥵🤯🥵🤯🥵🤯🥵
+
+```coq {1|2|3|4|5}{finally:'all',class:'!children:text-lg'}
+123    :  nat              :  Type  :  Type
+S      :  nat → nat        :  Type
+ev     :  nat → Prop       :  Type 
+ev_0   :  ev 0             :  Prop  :  Type
+ev_SS  :  nat → ev n → ev (S (S n)) :  Type
+```
+
+$$ {hide|all}{class:'!children:text-2xl'}
+\begin{align}
+\text{propositions} &\sim \text{types} \notag \\
+\text{proofs} &\sim \text{data values} \notag
+\end{align}
+$$
+
+---
+
+# 证明的另一种写法
+
+The "`Proof Object`" is a [data structure]{.underline}
+
+<div class="code-lg">
+
+##### 老方法：“证明脚本”
+
+```coq
+Theorem ev_4 : ev 4.
+Proof.
+  apply ev_SS. apply ev_SS. apply ev_0. Qed.
+```
+
+##### 直接构建证据：
+
+```coq
+Check (ev_SS 2 (ev_SS 0 ev_0))
+  : ev 4.
+
+Theorem ev_4': ev 4.
+Proof.
+  apply (ev_SS 2 (ev_SS 0 ev_0)).
+Qed.
+```
+
+</div>
+
+---
+
+# 命题即类型！柯里-霍华德同构
+
+THE CURRY-HOWARD CORRESPONDENCE  {.text-3xl.ttt}

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import lz from 'lz-string'
+import process from 'process'
 
 export default defineConfig({
   plugins: [
@@ -11,7 +12,9 @@ export default defineConfig({
         handler(code, id) {
           if (id.endsWith('.md')) {
             return code.replace(/^```coq editor\n([\s\S]*?)\n```/mg, (match, coqCode) => {
-              return `<coq-editor code="${lz.compressToBase64(coqCode)}" />`
+              return process.env.EXPORT_SLIDES ?
+                `\`\`\`coq\n${coqCode}\n\`\`\`` :
+                `<coq-editor code="${lz.compressToBase64(coqCode)}" />`
             })
           }
         }
