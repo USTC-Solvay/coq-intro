@@ -21,7 +21,7 @@ const replaceMap = {
 }
 
 const code = computed(() => {
-  let result = lz.decompressFromBase64(props.code).trim()
+  let result = lz.decompressFromBase64(props.code)
   for (const [key, value] of Object.entries(replaceMap)) {
     result = result.replaceAll(key, value)
   }
@@ -36,7 +36,7 @@ const style = computed(() => {
   const lineNum = code.value.split('\n').length
   return {
     width: '100%',
-    height: `${lineNum * 16.66666 + 30}px`,
+    height: `${lineNum * 20 + 30}px`,
   }
 })
 
@@ -50,12 +50,12 @@ onMounted(() => {
 
 <template>
   <RenderWhen context="main">
-    <iframe :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" />
+    <iframe :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" tabindex="-1" />
     <div data-waitfor=".loaded">
       <div class=".loaded" v-show="loaded"/>
     </div>
     <template #fallback>
-      <pre :style="style" class="overflow-y-auto">{{ code }}</pre>
+      <pre :style="style" class="overflow-y-auto leading-[20px] text-[14.6px]">{{ code }}</pre>
     </template>
   </RenderWhen>
 </template>

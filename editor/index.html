@@ -5,8 +5,9 @@
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <title>Coq playground</title>
 
-  <!-- important: this will not work from *within* the jsCoq package dir; -->
-  <!-- this template is meant to be copied to your project dir and edited -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=PT+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+    type="text/css">
 
 </head>
 <style>
@@ -42,14 +43,14 @@
     --prism-comment: #758575;
     --prism-string: #d48372;
     --prism-literal: #429988;
-    --prism-keyword: #4d9375;
+    --prism-keyword: rgb(197, 134, 192);
     --prism-boolean: #1c6b48;
-    --prism-number: #6394bf;
-    --prism-variable: #c2b36e;
+    --prism-number: rgb(181, 206, 168);
+    --prism-variable: #DBD7CAEE;
     --prism-function: #a1b567;
     --prism-deleted: #a14f55;
     --prism-class: #54b1bf;
-    --prism-builtin: #e0a569;
+    --prism-builtin: rgb(86, 156, 214);
     --prism-property: #dd8e6e;
     --prism-namespace: #db889a;
     --prism-punctuation: #858585;
@@ -62,12 +63,34 @@
     --prism-selection-background: #444444;
   }
 
-  .cm-s-vars .cm-tactic {
-    color: var(--prism-keyword);
+  .cm-s-vars .cm-tactic,
+  .cm-s-vars .cm-terminator {
+    color: rgb(220, 220, 170);
   }
 
-  .cm-s-vars .cm-terminator {
-    color: var(--prism-deleted);
+  .cm-s-vars .cm-operator {
+    color: rgb(204, 204, 204);
+  }
+
+  .cm-s-vars .cm-parenthesis {
+    color: orchid;
+  }
+
+  .coq-eval-ok,
+  .cm-s-darcula .coq-eval-ok {
+    background-color: #483d8bd1 !important;
+  }
+
+  .jscoq.CodeMirror span {
+    font-family: "PT Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  }
+
+  .jscoq.CodeMirror {
+    line-height: 20px !important;
+  }
+
+  .CodeMirror .cm-builtin+.cm-variable {
+    color: rgb(78, 201, 176);
   }
 
   .CodeMirror>* {
@@ -84,13 +107,40 @@
     border-top: none !important;
   }
 
-  #goal-panel {
-    display: block !important;
+  .flex-container {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
     height: 100vh !important;
   }
 
-  .splash-image {
+  #goal-panel {
+    display: block !important;
+    flex-grow: 1 !important;
+  }
+
+  .msg-area {
+    position: absolute !important;
+    display: block !important;
+    height: 50% !important;
+    width: 100% !important;
+    bottom: 0 !important;
+  }
+
+  .msg-area .content {
+    height: 100% !important;
+  }
+
+  .caption, .splash-image {
     display: none !important;
+  }
+
+  #query-panel > div:not(.Notice,.Error) {
+    display: none !important;
+  }
+
+  #query-panel > div {
+    border: none !important;
   }
 
   .splash-above,
@@ -129,8 +179,8 @@
     height: 100% !important;
   }
 
-  #code-wrapper {
-    scrollbar-width: thin;
+  * {
+    scrollbar-width: thin !important;
     scrollbar-color: rgb(159, 159, 159) rgb(44, 44, 44) !important;
   }
 </style>
@@ -151,7 +201,7 @@
       prelude: true,
       implicit_libs: true,
       editor: { mode: { 'company-coq': true }, keyMap: 'default' },
-      init_pkgs: ['init','coq-base'],
+      init_pkgs: ['init', 'coq-base'],
       all_pkgs: ['coq'],
       theme: 'dark',
       init_import: [
@@ -159,7 +209,8 @@
         'Coq.Init.Logic',
         'Coq.Classes.RelationClasses',
         'Coq.Bool.Bool',
-      ]
+      ],
+      focus: false,
     };
 
     JsCoq.start(jscoq_ids, jscoq_opts);

@@ -122,3 +122,19 @@ index 5ccc28e10fdee414e2ebacbcdb2323da01303d57..781bf0d389e0f8755aa6fbf35928d7f3
          }
  
          this.coq.init(init_opts, doc_opts);
+diff --git a/ui-js/jscoq-agent.js b/ui-js/jscoq-agent.js
+index 7e7e8da7deeac0b716cdce61e1486d73412f290c..bbe3bfdf54ac71d7cf1ccfdae6181fa89928e7f2 100644
+--- a/ui-js/jscoq-agent.js
++++ b/ui-js/jscoq-agent.js
+@@ -40,11 +40,6 @@ async function jsCoqLoad() {
+         if (code.textContent?.match(/^\s*$/)) code.remove();
+     }
+ 
+-    // - make page div focusable so that keyboard scrolling works
+-    var page = /** @type {HTMLElement} */ (document.querySelector('#page'));
+-    page.setAttribute('tabindex', '-1');
+-    page.focus();
+-
+     // - load and start jsCoq
+     await JsCoq.load(jscoq_opts.base_path);
+ 

@@ -5,12 +5,18 @@ title: The Coq Proof Assistant
 transition: slide-left
 colorSchema: dark
 mdc: true
-class: pt-0
+class: pt-3
 ---
 
 # [The]{.op80} [Coq]{.font-mono} [Proof Assistant]{.op80}
 
-计算机辅助证明简介{.!op90}
+计算机辅助证明简介{.!op90.text-2xl.pt-4}
+
+<div absolute font-mono right-10 bottom-4>
+
+_Kerman @ USTC Solvay
+
+</div>
 
 ---
 
@@ -486,7 +492,7 @@ Qed.
 
 # Informal Proof {.!text-3xl.pl-20}
 
-<div text-xs class="informal-proof">
+<div text-xs px-4 py-1 class="-mt-2 informal-proof">
 
 Theorem: For any n, m and p,
 $$
@@ -640,7 +646,8 @@ $$
 $$
 
 ```coq editor
-(* ignore this *) Axiom add_comm : ∀ n m : nat, n + m = m + n.
+(* ignore this *) Axiom add_comm : ∀ n m : nat,
+    n + m = m + n.
 
 Theorem specialize_example: ∀ n,
   (∀ m, m×n = 0) → n = 0.
@@ -707,6 +714,8 @@ Coq 中的逻辑
 
 </div>
 
+---
+zoom: 0.9
 ---
 
 # Logic in Coq
@@ -1152,21 +1161,21 @@ proving
 <div class="code-lg">
 
 ````md magic-move
-```coq {*}
+```coq
 Theorem example_proof: ∀ n,
   (∀ m, m×n = 0) → n = 0.
 Proof.
   ......
 Qed.
 ```
-```coq {*}
+```coq
 Theorem example_proof: (n: nat) →
   ((m: nat) → m×n = 0) → n = 0.
 Proof.
   ......
 Qed.
 ```
-```coq {*}
+```coq
 Theorem example_proof: (n: nat) →
   ((m: nat) → (H: m×n = 0)) → (Target: n = 0).
 Proof.
@@ -1180,13 +1189,13 @@ Qed.
 假设是 C 语言：{.!-mb-1}
 
 ````md magic-move {at:'+2'}
-```c {*}
+```cpp
 ??? example_proof(??? n, ??? H) {
   ......
 }
 ```
-```c {*}
-n_is_0 example_proof(n n, forall_m_mxn_is_0 H) {
+```cpp
+n_is_0 example_proof(nat n, forall_m_mxn_is_0 H) {
   ......
 }
 ```
@@ -1276,7 +1285,7 @@ Proof.
   apply ev_SS. apply ev_SS. apply ev_0. Qed.
 ```
 
-##### 直接构建证据：
+#### 直接构建证据 {.pt-4}
 
 ```coq
 Check (ev_SS 2 (ev_SS 0 ev_0))
@@ -1292,6 +1301,163 @@ Qed.
 
 ---
 
-# 命题即类型！柯里-霍华德同构
+# 证明的另一种写法
+
+The "`Proof Object`" is a [data structure]{.underline}
+
+<div class="code-lg">
+
+##### 老方法：“证明脚本”
+
+```coq
+Theorem ev_plus4 : ∀ n, ev n → ev (4 + n).
+Proof.
+  intros n H. simpl.
+  apply ev_SS.
+  apply ev_SS.
+  apply H.
+Qed.
+```
+
+#### 证明即函数！ {.pt-4}
+
+```coq
+Definition ev_plus4' (n : nat) (H : ev n)
+                    : ev (4 + n) :=
+  ev_SS (S (S n)) (ev_SS n H).
+```
+
+</div>
+
+---
+
+# 函数的另一种写法
+
+函数可以当证明写吗？
+
+<div class="code-lg">
+
+##### 老方法：函数定义
+
+```coq
+Definition add1 (n : nat) : nat :=
+  S n.
+```
+
+#### 证明的写法 {.pt-4}
+
+```coq editor
+Definition add1 : nat → nat.
+  intro n.
+  Show Proof.
+  apply S.
+  Show Proof.
+  apply n.
+Defined.
+```
+
+</div>
+
+---
+
+# Coq 中的“证明”是什么？ {.text-xl}
+
+<br/>
+
+```mermaid
+graph LR;
+
+A'["数据结构 (nat / bool / ...)"]
+B'["命题 (ev 4 / a = b / ...)"]
+F'["函数"]
+C'["命题"]
+
+A' -..-> F'
+B' -..-> F'
+F' -..-> C'
+
+A(<strong style="font-size:x-large">数据 / 参数</strong>) -.-|类型是| A'
+B(<strong style="font-size:x-large">证据 / 前提</strong>) -.-|类型是| B'
+F' -.-|类型是| F([<strong style="font-size:x-large">证明</strong>])
+C' -.-|类型是| C(<strong style="font-size:x-large">结论 / 证明对象</strong>)
+
+A --> F
+B --> F
+F --> C
+```
+
+<div v-click pl-95 text-4xl py-5>
+<carbon:arrow-down />
+</div>
+
+<div v-after pl-26>
+
+```mermaid
+graph LR;
+
+A(<span style="font-size:large">参数</span>)
+-----> F([<span style="font-size:large">证明</span>])
+-----> C(<span style="font-size:large">结论 / 证明对象</span>)
+```
+
+</div>
+
+---
+
+# 柯里-霍华德同构
 
 THE CURRY-HOWARD CORRESPONDENCE  {.text-3xl.ttt}
+
+---
+
+# Final Example
+
+证明 $\exists \space x \in \N, \space x \space \text{is even}$
+
+```coq editor
+Inductive ev : nat -> Prop :=
+  | ev_0 : ev 0
+  | ev_SS (n : nat) (H : ev n) : ev (S (S n)).
+
+Inductive ex {A : Type} (P : A -> Prop) : Prop :=
+  | ex_intro : forall x : A, P x -> ex P.
+
+Check () (*: ex ev *).
+
+
+
+
+
+
+
+
+
+
+```
+
+---
+layout: two-cols
+---
+
+
+# Further Reading
+
+<div />
+
+### [Software Foundations](https://softwarefoundations.cis.upenn.edu/current/index.html) Vol. 1
+
+<a href="https://softwarefoundations.cis.upenn.edu/lf-current/index.html">
+<img w-80 src="https://softwarefoundations.cis.upenn.edu/common/media/image/lf_icon.jpg">
+</a>
+
+::right::
+
+<Transform class="w-[300%] h-[240%] -mx-30 -mt-20" scale="0.5">
+<iframe w-full h-full src="https://softwarefoundations.cis.upenn.edu/lf-current/deps.html" />
+</Transform>
+
+---
+layout: end
+---
+
+Thanks
