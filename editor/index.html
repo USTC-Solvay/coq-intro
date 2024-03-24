@@ -1,15 +1,14 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" class="dark">
-  <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <title>Coq playground</title>
 
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=PT+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
-      type="text/css"
-    />
-  </head>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <title>Coq playground</title>
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=PT+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+    type="text/css" />
+
   <style>
     @import "node_modules/prism-theme-vars/base.css";
     @import "node_modules/codemirror-theme-vars/base.css";
@@ -90,11 +89,11 @@
       line-height: 20px !important;
     }
 
-    .CodeMirror .cm-builtin + .cm-variable {
+    .CodeMirror .cm-builtin+.cm-variable {
       color: rgb(78, 201, 176);
     }
 
-    .CodeMirror > * {
+    .CodeMirror>* {
       background-color: rgb(27, 27, 27) !important;
       /* border: 1px gray solid; */
       /* border-radius: 5px; */
@@ -137,11 +136,11 @@
       display: none !important;
     }
 
-    #query-panel > div:not(.Notice, .Error) {
+    #query-panel>div:not(.Notice, .Error) {
       display: none !important;
     }
 
-    #query-panel > div {
+    #query-panel>div {
       border: none !important;
     }
 
@@ -163,7 +162,7 @@
       display: none !important;
     }
 
-    #goal-panel > .caption {
+    #goal-panel>.caption {
       display: none !important;
     }
 
@@ -187,44 +186,46 @@
       scrollbar-color: rgb(159, 159, 159) rgb(44, 44, 44) !important;
     }
   </style>
+</head>
 
-  <body class="jscoq-main">
-    <div id="ide-wrapper" class="toggled">
-      <div id="code-wrapper">
-        <textarea id="coq-code">(* Write some Coq code in here *)</textarea>
-      </div>
+<body class="jscoq-main">
+  <div id="ide-wrapper" class="toggled">
+    <div id="code-wrapper">
+      <textarea id="coq-code">(* Write some Coq code in here *)</textarea>
     </div>
+  </div>
 
-    <!-- jsCoq configuration part -->
-    <script type="module">
-      import { JsCoq } from "./node_modules/jscoq/jscoq.js";
+  <!-- jsCoq configuration part -->
+  <script type="module">
+    import { JsCoq } from "./node_modules/jscoq/jscoq.js";
 
-      var jscoq_ids = ["coq-code"];
-      var jscoq_opts = {
-        prelude: true,
-        implicit_libs: true,
-        editor: { mode: { "company-coq": true }, keyMap: "default" },
-        init_pkgs: ["init", "coq-base"],
-        all_pkgs: ["coq"],
-        theme: "dark",
-        init_import: [
-          "Coq.Init.Nat",
-          // 'Coq.Init.Logic',
-          "Coq.Classes.RelationClasses",
-          "Coq.Bool.Bool",
-        ],
-        focus: false,
-      };
+    var jscoq_ids = ["coq-code"];
+    var jscoq_opts = {
+      prelude: true,
+      implicit_libs: true,
+      editor: { mode: { "company-coq": true }, keyMap: "default" },
+      init_pkgs: ["init", "coq-base"],
+      all_pkgs: ["coq"],
+      theme: "dark",
+      init_import: [
+        "Coq.Init.Nat",
+        // 'Coq.Init.Logic',
+        "Coq.Classes.RelationClasses",
+        "Coq.Bool.Bool",
+      ],
+      focus: false,
+    };
 
-      JsCoq.start(jscoq_ids, jscoq_opts);
+    JsCoq.start(jscoq_ids, jscoq_opts);
 
-      const el = document.getElementById("coq-code");
+    const el = document.getElementById("coq-code");
 
-      let params = new URL(document.location).searchParams;
-      let code = params.get("code");
-      if (code) {
-        el.value = code;
-      }
-    </script>
-  </body>
+    let params = new URL(document.location).searchParams;
+    let code = params.get("code");
+    if (code) {
+      el.value = code;
+    }
+  </script>
+</body>
+
 </html>
