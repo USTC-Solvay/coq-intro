@@ -9,16 +9,23 @@
     serif;
 }
 .tatics li > span:nth-child(1) {
+  display: inline-block;
   margin-right: 3px;
   padding: 0 5px;
   border: 1px solid #aaa;
   border-radius: 3px;
   background-color: rgba(255 255 255 / 0.1);
+  width: 130px;
+  margin-top: 3px;
+  line-height: 19px;
+  height: 1.5em;
 }
 .code-lg .shiki {
-  font-size: 0.8em !important;
+  font-size: 1em !important;
   line-height: 1.4em !important;
 }
 :root {
   --slidev-theme-primary: #7da3b2 !important;
+  --prism-font-size: 16px !important;
+  --prism-line-height: 1.6em !important;
 }

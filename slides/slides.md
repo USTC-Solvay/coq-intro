@@ -178,7 +178,7 @@ Inductive day : Type :=
 
 <div relative flex flex-cols gap-6>
 
-```cpp {*}{class:'!children:text-[16px]'}
+```cpp {*}
 // C++
 day next_day(day d) {
   switch (d) {
@@ -223,7 +223,7 @@ Inductive bool : Type :=
 
 <div mt-2 grid grid-cols-3 gap-3>
 
-```coq {*}{class:'!children:text-[16px]'}
+```coq {*}
 Definition negb
     (b:bool) : bool :=
   match b with
@@ -232,7 +232,7 @@ Definition negb
   end.
 ```
 
-```coq {*}{class:'!children:text-[16px]'}
+```coq {*}
 Definition andb
     (b1 b2:bool) : bool :=
   match b1 with
@@ -241,7 +241,7 @@ Definition andb
   end.
 ```
 
-```coq {*}{class:'!children:text-[16px]'}
+```coq {*}
 Definition orb
     (b1 b2:bool) : bool :=
   match b1 with
@@ -258,7 +258,7 @@ Definition orb
 
 从枚举开始的数据表示法：自然数，基于皮亚诺公理
 
-```coq {*}{class:'!children:text-[16px]'}
+```coq {*}
 Inductive nat : Type :=
   | O             (* 0 *)
   | S (n : nat).  (* n 的后继(Successor) *)
@@ -277,15 +277,15 @@ Inductive nat : Type :=
 </div>
 </v-click>
 
-<div v-click class="text-3xl -mt-4 ml-10 font-serif -rotate-7">
+<div v-click class="text-3xl ml-10 font-serif -rotate-2">
 一进制 ？？？
 </div>
 
 ---
 
-#### succ 的反操作：pred
+### succ 的反操作：pred
 
-```coq
+```coq {*}
 Definition pred (n : nat) : nat :=
   match n with
   | O ⇒ O
@@ -295,19 +295,28 @@ Definition pred (n : nat) : nat :=
 
 <div v-click class="text-xl mt-10">
 
-如何判断奇偶性？
-
-$\text{even:} \space \space \mathbb{N} \to \mathbb{B}$
+### 如何判断奇偶？（$\text{even:} \space \space \mathbb{N} \to \mathbb{B}$）
 
 </div>
+
+```coq {hide|all}
+Definition even (n : nat) : bool :=
+  match n with
+  | O ⇒ true
+  | S O ⇒ false
+  | S (S O) ⇒ true
+  | S (S (S O)) ⇒ false
+  .......
+  🤯
+```
 
 ---
 
 # 递归函数
 
-函数式编程的特征之一
+函数式编程的特征
 
-#### even
+### even
 
 ```coq
 Fixpoint even (n:nat) : bool :=
@@ -318,7 +327,9 @@ Fixpoint even (n:nat) : bool :=
   end.
 ```
 
-#### odd
+<div h-4 />
+
+### odd
 
 ```coq
 Definition odd (n:nat) : bool :=
@@ -331,7 +342,7 @@ Definition odd (n:nat) : bool :=
 
 更多的例子
 
-#### plus
+### plus
 
 ```coq
 Fixpoint plus (n : nat) (m : nat) : nat :=
@@ -341,9 +352,9 @@ Fixpoint plus (n : nat) (m : nat) : nat :=
   end.
 ```
 
-<div h-3 />
+<div h-4 />
 
-#### mult
+### mult
 
 ```coq
 Fixpoint mult (n m : nat) : nat :=
@@ -355,21 +366,30 @@ Fixpoint mult (n m : nat) : nat :=
 
 ---
 
-# 好了，开始证吧！
+# 证明
 
 从显然的命题开始
-
-<!-- Should be interactive -->
 
 $$
 \forall n \in \N, \space 0 + n = n
 $$
 
-```coq
+<div absolute w-217 v-click-hide>
+
+```coq editor
 Theorem plus_O_n : ∀ n : nat, 0 + n = n.
+
+
+
+
+
 ```
 
-```coq {hide|all}
+</div>
+<div v-after>
+
+```coq editor
+Theorem plus_O_n : ∀ n : nat, 0 + n = n.
 Proof.
   intros n.
   simpl.
@@ -377,7 +397,9 @@ Proof.
 Qed.
 ```
 
-<div v-click pt-2>
+</div>
+
+<div v-after pt-2>
 
 _simpl_ [简化表达式]{.op80}: $0 + n$ 由 $\text{plus}$ 的定义，化简为 $n$
 
@@ -395,17 +417,22 @@ $$
 \forall n \in \N, \space n = m \Rightarrow n + n = m + m
 $$
 
-<div v-if="$clicks < 1">
+<div absolute w-217 v-click-hide>
 
-```coq
+```coq editor
 Theorem plus_id_example : ∀ n m:nat,
   n = m →
   n + n = m + m.
+
+
+
+
+
+
 ```
 
 </div>
-
-<div v-click>
+<div v-after>
 
 ```coq editor
 Theorem plus_id_example : ∀ n m:nat,
@@ -429,9 +456,10 @@ Qed.
 
 # ???
 
-又一个“显然”的命题
+又一个“显然”的命题 {.!op60}
 
 $$
+{*}{class:'-mt-15 text-2xl'}
 \forall n \in \N, \space n + 1 \neq 0
 $$
 
@@ -440,7 +468,11 @@ Theorem plus_1_neq_0 : ∀ n : nat,
   (n + 1) =? 0 = false.
 ```
 
-<span op80>$\text{eqb}$ 的定义：</span>
+<div op80 mb--2>
+
+$\text{eqb}$ 的定义：
+
+</div>
 
 ```coq
 Fixpoint eqb (n m : nat) : bool :=
@@ -539,11 +571,9 @@ $$
 
 # First Try
 
-Using the `destruct` tactic
+使用 `destruct` 策略
 
-$$
-\forall n \in \N, \space n + 0 = n
-$$
+证明：$\forall n \in \N, \space n + 0 = n$
 
 ```coq editor
 Theorem add_0_r_firsttry : ∀ n:nat,
@@ -560,11 +590,11 @@ Abort.
 
 ---
 
-# 递归地证明
+# 递归的证明
 
 The `induction` tactic
 
-<span v-mark.circle.orange>递归地定义</span> $\Rightarrow$ 递归地证明：
+<span v-mark.orange="0">递归的定义$\Rightarrow$ 递归的证明</span>
 
 ```coq editor
 Theorem add_0_r : ∀ n:nat, n + 0 = n.
@@ -639,7 +669,7 @@ $$
 
 # Formal Proof {.!text-3xl.pl-20}
 
-```coq
+```coq {*}{class:'!children:children:text-[14px]'}
 Theorem add_assoc :
   ∀ n m p : nat,
     n + (m + p) = (n + m) + p.
@@ -686,6 +716,14 @@ Qed.
 
 </div>
 
+<div
+  absolute w-90 h-90 left-170 top--20 border="~ green rounded-full"
+  bg-green:20 text-2xl text-green flex="~ items-center justify-center"
+  op35
+>
+  函数式编程
+</div>
+
 ---
 
 # More Tactics
@@ -695,6 +733,7 @@ Qed.
 ### $\text{injection}$
 
 $$
+{*}{class:'-mt-14 text-2xl'}
 \operatorname{S} \space a = \operatorname{S} \space b \space \Rightarrow \space a = b
 $$
 
@@ -727,6 +766,7 @@ $$
 ### $\text{discriminate}$
 
 $$
+{*}{class:'-mt-14 text-2xl'}
 \operatorname{S} \space a \neq \operatorname{O}
 $$
 
@@ -757,6 +797,7 @@ $$
 ### $\text{specialize}$
 
 $$
+{*}{class:'-mt-14 text-2xl'}
 \forall a \in \N, \space P(a) \space \Rightarrow \space a = b
 $$
 
@@ -780,7 +821,7 @@ Qed.
 
 # The Tactics
 
-一些基本的“策略”：
+[Coq]{.font-mono} 中一些基本的“策略”：
 
 <div class="text-xs !leading-1 tatics -mt-4">
 
@@ -811,19 +852,19 @@ Qed.
 
 ---
 
-# Logic in Coq
+# Logic in [Coq]{.font-mono}
 
-Coq 中的逻辑
+形式化的逻辑
 
-|        | 命题 (propositions)                             | Boolean                                            |
-| ------ | ----------------------------------------------- | -------------------------------------------------- |
-| 逻辑与 | $\text{and}$ <span op70 pl-7 pr-4>/</span> `/\` | $\text{andb}$ <span op70 pl-7 pr-4>/</span> `&&`   |
-| 逻辑或 | $\text{or}$ <span op70 pl-11 pr-4>/</span> `\/` | $\text{orb}$ <span op70 pl-11 pr-4>/</span> `\|\|` |
+|        | 命题 (propositions)                             | Boolean                                            | Union  |
+| ------ | ----------------------------------------------- | -------------------------------------------------- | ------ |
+| 逻辑与 | $\text{and}$ <span op70 pl-7 pr-4>/</span> `/\` | $\text{andb}$ <span op70 pl-7 pr-4>/</span> `&&`   | $\cap$ |
+| 逻辑或 | $\text{or}$ <span op70 pl-11 pr-4>/</span> `\/` | $\text{orb}$ <span op70 pl-11 pr-4>/</span> `\|\|` | $\cup$ |
 
 <div v-click>
 
-| 相等&emsp; | $\text{eq}$ <span op70 pl-11 pr-4>/</span> `=` <div w-38 /> | $\text{eqb}$ <span op70 pl-11 pr-4>/</span> `=?` |
-| ---------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| 相等&emsp; | $\text{eq}$ <span op70 pl-11 pr-4>/</span> `=` <div w-38 /> | $\text{eqb}$ <span op70 pl-11 pr-4>/</span> `=?` | $\text{=}$ <div w-12 /> |
+| ---------- | ----------------------------------------------------------- | ------------------------------------------------ | ----------------------- |
 
 </div>
 
@@ -831,9 +872,9 @@ Coq 中的逻辑
 zoom: 0.9
 ---
 
-# Logic in Coq
+# Logic in Coq {.!text-xl}
 
-相关证明
+相关证明 {.!text-3xl.!op80.!pb-0}
 
 ```coq editor
 Theorem and_commut : ∀ P Q : Prop,
@@ -846,9 +887,7 @@ Proof.
     - (* right *)
       apply HP.
 Qed.
-```
 
-```coq editor
 Theorem or_commut : ∀ P Q : Prop,
   P ∨ Q → Q ∨ P.
 Proof.
@@ -866,10 +905,10 @@ Qed.
 
 # Falsehood and Negation
 
-怎样描述命题为假？
+怎样描述命题为假？{.!op80}
 
 $$
-{hide|all}
+{hide|all}{class:'-mt-8'}
 \urcorner P \iff ∀ Q, \space P → Q
 $$
 
@@ -884,18 +923,29 @@ $$
 Definition not (P:Prop) := P → False.
 ```
 
-##### Some proofs:
+</div>
+<br/>
+<div v-click>
+
+#### Some proofs:
 
 </div>
-<div v-show="$clicks === 4">
+
+<div absolute w-217 v-click='[4,5]'>
 
 ```coq editor
 Theorem not_False :
   ¬ False.
+
+
+
+
+
+
 ```
 
 </div>
-<div v-click="'+2'" v-show="$clicks <= 5">
+<div absolute w-217 v-click='[5,6]'>
 
 ```coq editor
 Theorem not_False :
@@ -905,18 +955,25 @@ Proof.
   intros H.
   destruct H.
 Qed.
+
 ```
 
 </div>
-<div v-show="$clicks === 6">
+<div absolute w-217 v-click='[6,7]'>
 
 ```coq editor
 Theorem not_implies_our_not : ∀ (P:Prop),
   ¬ P → (∀ (Q:Prop), P → Q).
+
+
+
+
+
+
 ```
 
 </div>
-<div v-click="'+2'">
+<div absolute w-217 v-click='7'>
 
 ```coq editor
 Theorem not_implies_our_not : ∀ (P:Prop),
@@ -968,7 +1025,7 @@ $$
 
 限于篇幅，以下内容将被略过 {.!text-gray-400.!op100}
 
-<div text-gray-300>
+<div text-gray-300 style="--prism-font-size: 12px;">
 
 - $\text{True}$ 和 $\text{I}$
 
@@ -1024,12 +1081,18 @@ Abort.
 </div>
 
 ---
+class: pt-6
+---
 
 # Classical vs. Constructive Logic
 
+<div op80 mt--2>
+
 “有限制的排中律” [√]{.text-green.font-semibold}
 
-<div>
+</div>
+
+<div mt--2>
 
 ```coq editor
 Theorem restricted_excluded_middle : ∀ P b,
@@ -1060,7 +1123,7 @@ Qed.
 
 # Classical vs. Constructive Logic
 
-与排中律等价的公理
+与排中律等价的公理 {.!op90}
 
 <div class="!children:children:text-[15px] !children:mb-2">
 
@@ -1092,10 +1155,14 @@ Definition implies_to_or := ∀ P Q:Prop,
 </div>
 
 ---
+class: pt-6
+---
 
 # 递归无处不在
 
-递归的类型、递归的定义、递归的证明
+递归的类型、递归的定义、递归的证明 {.!op80.!mb-1}
+
+<div style="--prism-font-size: 14px;--prism-line-height: 1.4em;">
 
 ```coq
 Inductive nat : Type :=
@@ -1125,11 +1192,13 @@ Proof.
 Qed.
 ```
 
+</div>
+
 ---
 
 # 递归无处不在
 
-其实还有递归的命题
+其实还有递归的命题 {.!op90}
 
 ```coq {*}{class:'!children:text-lg !mb-5'}
 Inductive ev : nat → Prop :=
@@ -1157,15 +1226,15 @@ Inductive nat : Type :=
 </div>
 <div v-click="'+2'" text-2xl ml-20 mt-10>
 
-同一种语句!!! [(后面会用到)]{.pl-6.text-xl.op60.text-green-300}
+同一种语句!!! [(后面会用到)]{.pl-6.text-xl.op80.text-green-300}
 
 </div>
 
 ---
 
-# 递归的命题
+# 递归的命题 {.!mb-1}
 
-##### 以 $\text{ev}$ 为例
+#### $\text{ev} \space n$:&emsp;n 是偶数
 
 ```coq editor
 Inductive ev : nat → Prop :=
@@ -1187,6 +1256,7 @@ Qed.
 
 <br/>
 
+<!--
 ##### 以 $\text{le}$ 为例
 
 ```coq
@@ -1194,6 +1264,7 @@ Inductive le : nat → nat → Prop :=
   | le_n (n : nat)                : le n n
   | le_S (n m : nat) (H : le n m) : le n (S m).
 ```
+-->
 
 ---
 
@@ -1235,7 +1306,7 @@ proving
 
 <span v-mark.orange.box="2">Inductive</span> tatics: {.!-mb-2.text-xl}
 
-&emsp; `Inductive.` / ...
+&emsp; `induction n.` / ...
 
 </div>
 </div>
@@ -1244,7 +1315,7 @@ proving
 
 `Induction` 关键字
 
-`→` 运算符
+“`→`” 运算符
 
 </div>
 
@@ -1255,9 +1326,6 @@ proving
 <div absolute left-103 class="-top-15" w-37 h-37 rotate-45>
 <div absolute inset-0 v-mark.orange.box="{at:3, strokeWidth: 5}" />
 </div>
-</div>
-<div absolute left-96 top-50 text-orange text-xl v-click="3" delay-300>
-柯里-霍华德同构
 </div>
 </div>
 
@@ -1317,9 +1385,9 @@ n_is_0 example_proof(nat n, forall_m_mxn_is_0 H) {
 </div>
 </div>
 
-<div v-click text-4xl text-primary ml-8 mt-8>
+<div v-click text-4xl ml-8 mt-8>
 
-Proof in <span font-mono>Coq</span>: <span op80 text-2xl>Building a</span> <span v-mark.white.underline="6">tree of evidence</span>!
+Proof in <span font-mono>Coq</span>: <span op80 text-2xl text-primary>Building a</span> <span text-primary v-mark.white.underline="6">tree of evidence</span>!
 
 </div>
 
@@ -1553,6 +1621,7 @@ Check () (*: ex ev *).
 layout: iframe-right
 url: https://softwarefoundations.cis.upenn.edu/lf-current/deps.html
 scale: 0.58
+class: pl-3 pt-3
 ---
 
 # Further Reading
@@ -1573,7 +1642,15 @@ scale: 0.58
 
 ### [Coq]{.font-mono} 的名字由来
 
-Coq 主要在 INRIA开发，一些法国计算机科学家有用动物命名软件的传统：像 Caml、Elan、Foc、Phox 都心照不宣地遵循这种默契。在法国，“Coq”是雄鸡，发音也像构造演算 （Calculus of Constructions）的首字母缩写（CoC），它是 Coq 的基础。高卢雄鸡是法国的象征。C-o-q 还是 Thierry Coquand 名字的前三个字母， 他是 Coq 的早期开发者之一。
+Coq 主要在 INRIA开发，一些法国计算机科学家有用动物命名软件的传统：像 Caml、Elan、Foc、Phox 都心照不宣地遵循这种默契。在法国，“Coq”是雄鸡，发音也像构造演算 （Calculus of Constructions）的首字母缩写（CoC），它是 Coq 的基础。高卢雄鸡是法国的象征。C-o-q 还是 Thierry Coquand 名字的前三个字母， 他是 Coq 的早期开发者之一。 {.op90}
+
+<img absolute right-14 top-1 src="https://avatars.githubusercontent.com/u/34452610?v=4" width="150" >
+
+### 本次分享的 Slides {.pt-4}
+
+<div font-mono text-blue-300 mt-4 text-xl>
+<carbon-cursor-1 /> github.com/USTC-Solvay/coq-intro
+</div>
 
 ---
 layout: end
