@@ -14,7 +14,7 @@ class: pt-3
 
 <div absolute font-mono right-10 bottom-4>
 
-_Kerman @ USTC Solvay
+\_Kerman @ USTC Solvay
 
 </div>
 
@@ -101,7 +101,6 @@ image: https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Four_Colour_Map
 
 </v-clicks>
 
-
 <v-click>
 
 穷举法？ {.text-3xl.p-7}
@@ -119,7 +118,6 @@ image: https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Four_Colour_Map
 # Preface {.!text-2xl.!mb-0}
 
 ## 涉及内容 {.!text-4xl}
-
 
 <div absolute left-40 top-25>
   <div
@@ -269,12 +267,12 @@ Inductive nat : Type :=
 <v-click>
 <div>
 
-| 十进制 | as `nat` |
-| --- | --- |
-| 0 | `O` |
-| 1 | `S O` |
-| 2 | `S (S O)` |
-| 3 | `S (S (S O))` |
+| 十进制 | as `nat`      |
+| ------ | ------------- |
+| 0      | `O`           |
+| 1      | `S O`         |
+| 2      | `S (S O)`     |
+| 3      | `S (S (S O))` |
 
 </div>
 </v-click>
@@ -381,9 +379,9 @@ Qed.
 
 <div v-click pt-2>
 
-*simpl* [简化表达式]{.op80}: $0 + n$ 由 $\text{plus}$ 的定义，化简为 $n$
+_simpl_ [简化表达式]{.op80}: $0 + n$ 由 $\text{plus}$ 的定义，化简为 $n$
 
-*reflexivity* [自反性]{.op80}: $a = a$ 必然成立
+_reflexivity_ [自反性]{.op80}: $a = a$ 必然成立
 
 </div>
 
@@ -526,7 +524,6 @@ $$
 \forall n \in \N, \space 0 + n = n
 $$
 
-
 $$
 \forall n \in \N, \space n + 0 = n
 $$
@@ -583,7 +580,6 @@ Proof.
 Qed.
 ```
 
-
 <div v-click text-xl pt-4>
 分类讨论的升级版？
 </div>
@@ -604,28 +600,38 @@ Qed.
 <div text-xs px-4 py-1 class="-mt-2 informal-proof">
 
 Theorem: For any n, m and p,
+
 $$
 n + (m + p) = (n + m) + p.
 $$
+
 Proof: By induction on n. \
 <span pl-9/> First, suppose n = 0. We must show that
+
 $$
 0 + (m + p) = (0 + m) + p.
 $$
+
 <span pl-9/> This follows directly from the definition of +.\
 <span pl-9/> Next, suppose n = S n', where
+
 $$
 n' + (m + p) = (n' + m) + p.
 $$
+
 <span pl-9/> We must now show that
+
 $$
 (S n') + (m + p) = ((S n') + m) + p.
 $$
+
 <span pl-9/> By the definition of +, this follows from
+
 $$
 S (n' + (m + p)) = S ((n' + m) + p),
 $$
-<span pl-9/> which is immediate from the induction hypothesis. *Qed*.
+
+<span pl-9/> which is immediate from the induction hypothesis. _Qed_.
 
 </div>
 </div>
@@ -674,7 +680,7 @@ Qed.
 
   多态和高阶函数
 
-- Total and Partial Maps  &nbsp; (Maps)
+- Total and Partial Maps &nbsp; (Maps)
 
   函数式编程下的映射 / 表
 
@@ -737,7 +743,7 @@ Qed.
 <div v-click ml-69 w-80 text-xl mt-3 v-mark.cross.red>
 
 $$
-f \neq g \space \overset{?}{\Rightarrow} \space f(a) \neq g(b) 
+f \neq g \space \overset{?}{\Rightarrow} \space f(a) \neq g(b)
 $$
 
 </div>
@@ -809,17 +815,15 @@ Qed.
 
 Coq 中的逻辑
 
-|    | 命题 (propositions) | Boolean |
-| --- | --- | --- |
-| 逻辑与 | $\text{and}$ <span op70 pl-7 pr-4>/</span> `/\` | $\text{andb}$ <span op70 pl-7 pr-4>/</span> `&&` |
+|        | 命题 (propositions)                             | Boolean                                            |
+| ------ | ----------------------------------------------- | -------------------------------------------------- |
+| 逻辑与 | $\text{and}$ <span op70 pl-7 pr-4>/</span> `/\` | $\text{andb}$ <span op70 pl-7 pr-4>/</span> `&&`   |
 | 逻辑或 | $\text{or}$ <span op70 pl-11 pr-4>/</span> `\/` | $\text{orb}$ <span op70 pl-11 pr-4>/</span> `\|\|` |
-
-
 
 <div v-click>
 
 | 相等&emsp; | $\text{eq}$ <span op70 pl-11 pr-4>/</span> `=` <div w-38 /> | $\text{eqb}$ <span op70 pl-11 pr-4>/</span> `=?` |
-| --- | --- | --- |
+| ---------- | ----------------------------------------------------------- | ------------------------------------------------ |
 
 </div>
 
@@ -864,11 +868,13 @@ Qed.
 
 怎样描述命题为假？
 
-$$ {hide|all}
+$$
+{hide|all}
 \urcorner P \iff ∀ Q, \space P → Q
 $$
 
-$$ {hide|all}
+$$
+{hide|all}
 \urcorner P \iff P → \operatorname{False}
 $$
 
@@ -958,9 +964,7 @@ $$
 
 ---
 
-
 # Skipped Chapters {.!text-gray-300}
-
 
 限于篇幅，以下内容将被略过 {.!text-gray-400.!op100}
 
@@ -1016,7 +1020,6 @@ Abort.
 </div>
 
 <div v-click>
-
 
 </div>
 
@@ -1198,8 +1201,6 @@ Inductive le : nat → nat → Prop :=
 
 仅仅是记号上的巧合？ {.text-2xl}
 
-
-
 <!--
 > "Algorithms are the computational content of proofs." (Robert Harper) {.text-center}
 -->
@@ -1277,6 +1278,7 @@ Proof.
   ......
 Qed.
 ```
+
 ```coq
 Theorem example_proof: (n: nat) →
   ((m: nat) → m×n = 0) → n = 0.
@@ -1284,6 +1286,7 @@ Proof.
   ......
 Qed.
 ```
+
 ```coq
 Theorem example_proof: (n: nat) →
   ((m: nat) → (H: m×n = 0)) → (Target: n = 0).
@@ -1303,6 +1306,7 @@ Qed.
   ......
 }
 ```
+
 ```cpp
 n_is_0 example_proof(nat n, forall_m_mxn_is_0 H) {
   ......
@@ -1350,10 +1354,10 @@ Answer：They are **types**!
 
 ### <span text-primary>"`:`" 符号的含义:</span>
 
-| `A : B` | 例子 | 对于 `ev_0 : ev 0` 的解释 |
-| --- | --- | --- |
-| A 的类型是 B | `n : nat` | `ev_0` 的类型是 `ev 0` |
-| A 的证据是 B | `H : ev n` | `ev_0` 的证据是 `ev 0` |
+| `A : B`      | 例子       | 对于 `ev_0 : ev 0` 的解释 |
+| ------------ | ---------- | ------------------------- |
+| A 的类型是 B | `n : nat`  | `ev_0` 的类型是 `ev 0`    |
+| A 的证据是 B | `H : ev n` | `ev_0` 的证据是 `ev 0`    |
 
 </div>
 
@@ -1366,12 +1370,13 @@ Answer：They are **types**!
 ```coq {1|2|3|4|5}{finally:'all',class:'!children:text-lg'}
 123    :  nat              :  Type  :  Type
 S      :  nat → nat        :  Type
-ev     :  nat → Prop       :  Type 
+ev     :  nat → Prop       :  Type
 ev_0   :  ev 0             :  Prop  :  Type
 ev_SS  :  nat → ev n → ev (S (S n)) :  Type
 ```
 
-$$ {hide|all}{class:'!children:text-2xl'}
+$$
+{hide|all}{class:'!children:text-2xl'}
 \begin{align}
 \text{propositions} &\sim \text{types} \notag \\
 \text{proofs} &\sim \text{data values} \notag
@@ -1515,7 +1520,7 @@ A(<span style="font-size:large">参数</span>)
 
 # 柯里-霍华德同构
 
-THE CURRY-HOWARD CORRESPONDENCE  {.text-3xl.ttt}
+THE CURRY-HOWARD CORRESPONDENCE {.text-3xl.ttt}
 
 ---
 
@@ -1578,6 +1583,6 @@ Thanks {.text-3xl.font-mono}
 
 <div absolute font-mono right-10 bottom-4 class="!text-[18px]">
 
-_Kerman @ USTC Solvay
+\_Kerman @ USTC Solvay
 
 </div>

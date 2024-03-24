@@ -5,11 +5,16 @@
   "scripts": {
     "dev": "pnpm -r --parallel run dev",
     "build": "pnpm -C ./slides run build",
-    "export": "pnpm -C ./slides run export"
+    "export": "pnpm -C ./slides run export",
+    "format": "prettier --write ."
   },
-	"pnpm": {
-		"patchedDependencies": {
-			"jscoq@0.16.0": "patches/jscoq@0.16.0.patch"
-		}
-	}
+  "pnpm": {
+    "patchedDependencies": {
+      "jscoq@0.16.0": "patches/jscoq@0.16.0.patch"
+    }
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-slidev": "^1.0.5"
+  }
 }
