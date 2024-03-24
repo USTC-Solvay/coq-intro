@@ -34,7 +34,9 @@ const code = computed(() => {
 });
 
 const url = computed(() => {
-  return `http://localhost:11451?code=${encodeURIComponent(code.value)}`;
+  return __DEV__
+    ? `http://localhost:11451?code=${encodeURIComponent(code.value)}`
+    : `${import.meta.env.BASE_URL}editor?code=${encodeURIComponent(code.value)}`;
 });
 
 const style = computed(() => {

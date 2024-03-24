@@ -41,6 +41,8 @@ jobs:
         run: pnpm i
       - name: Build
         run: pnpm build --base /coq-intro/
+      - name: Copy editor
+        run: cp -r ./editor ./slides/dist/editor
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

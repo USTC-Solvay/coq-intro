@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import lz from "lz-string";
 import process from "process";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [
     {
       name: "coq-editor",
@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => ({
             return code.replace(
               /^```coq editor\n([\s\S]*?)\n```/gm,
               (match, coqCode) => {
-                return process.env.EXPORT_SLIDES || command === 'build'
+                return process.env.EXPORT_SLIDES
                   ? `\`\`\`coq\n${coqCode}\n\`\`\``
                   : `<coq-editor code="${lz.compressToBase64(coqCode)}" />`;
               },
@@ -24,4 +24,4 @@ export default defineConfig(({ command }) => ({
       },
     },
   ],
-}));
+});

@@ -1,6 +1,6 @@
 ---
 theme: seriph
-background: cover.jpg
+background: /cover.jpg
 title: The Coq Proof Assistant
 transition: slide-left
 colorSchema: dark
@@ -1585,10 +1585,12 @@ A(<span style="font-size:large">参数</span>)
 </div>
 
 ---
+layout: fact
+---
 
 # 柯里-霍华德同构
 
-THE CURRY-HOWARD CORRESPONDENCE {.text-3xl.ttt}
+THE CURRY-HOWARD CORRESPONDENCE {.text-3xl}
 
 ---
 
