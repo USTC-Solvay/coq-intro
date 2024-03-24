@@ -41,7 +41,6 @@ jobs:
         run: pnpm i
       - name: Build
         run: pnpm build --base /coq-intro/
-        working-directory: ./editor
       - name: Copy editor
         run: cp -r -P ./editor ./slides/dist/editor
       - name: Upload artifact
