@@ -27,5 +27,5 @@
 :root {
   --slidev-theme-primary: #7da3b2 !important;
   --prism-font-size: 16px !important;
-  --prism-line-height: 1.6em !important;
+  --prism-line-height: 20px !important;
 }
