@@ -3,7 +3,7 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev",
-    "export": "slidev export"
+    "export": "slidev export --timeout 300000"
   },
   "dependencies": {
     "@slidev/cli": "^0.48.7",

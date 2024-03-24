@@ -19,15 +19,88 @@ _Kerman @ USTC Solvay
 </div>
 
 ---
+class: pt-6
+---
 
-# Preface
+# Preface {.!text-2xl.!mb-0}
 
-什么是计算机辅助证明
+## The [Coq]{.font-mono} Proof Assistant
 
-### 四色定理
+<img absolute right-14 top-5 src="https://avatars.githubusercontent.com/u/34452610?v=4" width="150" >
+
+<div class="!children:list-circle text-xl my-2">
+
+- 形式化
+- 交互式
+
+</div>
+
+<div scale-90 w-240 style="transform-origin:left top">
+
+```coq editor
+Theorem add_0_r : forall n:nat, n + 0 = n.
+Proof.
+  intros n. induction n as [| n' IHn'].
+  - reflexivity.
+  - simpl. rewrite -> IHn'. reflexivity.
+Qed.
+
+Theorem add_comm : forall n m : nat,
+  n + m = m + n.
+Proof.
+  induction n as [| n' IHn'].
+  - simpl. intro m.
+    rewrite add_0_r. reflexivity.
+  - simpl. intro m.
+    rewrite IHn'. induction m as [| m' IHm'].
+      + reflexivity.
+      + simpl. rewrite IHm'. reflexivity.
+Qed.
+```
+
+</div>
+
+---
+
+# Preface {.!text-2xl.!mb-0}
+
+## 用途
+
+<v-clicks mt-6 text-xl at="+0">
+
+- 证明数学定理
+  <span absolute left-135 text-gray> <carbon-arrow-right /> 四色定理、开普勒猜想…… </span>
+  - 需要大量计算的定理
+  - 没有歧义的形式化数学证明
+- 证明软件的正确性
+  - 验证编译器的优化是否不改变程序的行为
+    <span absolute left-135 text-gray> <carbon-arrow-right /> CompCert: 完全验证的 C 优化编译器 </span>
+  - 验证算法的正确性
+    <span absolute left-135 text-gray> <carbon-arrow-right /> CertiCrypt: 论证密码学算法安全性 </span>
+- ...
+
+</v-clicks>
+
+---
+layout: image-right
+image: https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Four_Colour_Map_Example.svg/375px-Four_Colour_Map_Example.svg.png
+---
+
+# Preface {.!text-2xl.!mb-0}
+
+## 四色定理的证明
+
+<v-clicks mt-10>
 
 - 1976 年，借助计算机验证了“1936个构形都是可约构形”的结论，从而证明了四色定理
+
 - 2004 年，Georges Gonthier 使用 Coq **可靠地**证明了该结论
+  <div font-mono text-blue-300 w-100>
+  <carbon-cursor-1 /> github.com/coq-community/fourcolor
+  </div>
+
+</v-clicks>
+
 
 <v-click>
 
@@ -35,35 +108,42 @@ _Kerman @ USTC Solvay
 
 </v-click>
 
-
 <v-click>
 
-不仅仅是！ {.text-3xl.p-7}
+不仅仅是！ {.text-3xl.px-7}
 
 </v-click>
 
 ---
 
-# Preface
+# Preface {.!text-2xl.!mb-0}
 
-### 用途
+## 涉及内容 {.!text-4xl}
 
-- 证明需要进行大量穷举的数学定理
-- 使用真正严谨、没有歧义的语言进行数学证明
-- 证明软件的正确性
-  - 验证编译器的优化是否不改变程序的行为
-  - 验证算法的正确性
-- ...
 
----
-
-# Preface
-
-### 涉及
-
-- 构建证明逻辑
-- 函数式编程
-- 类型理论
+<div absolute left-40 top-25>
+  <div
+    v-click
+    absolute w-120 h-120 left-0 top--10 border="~ blue rounded-full"
+    bg-blue:20 text-3xl text-blue flex="~ items-center justify-center"
+  >
+    形式化证明
+  </div>
+  <div
+    v-click
+    absolute w-90 h-90 left-80 top--40 border="~ green rounded-full"
+    bg-green:20 text-3xl text-green flex="~ items-center justify-center"
+  >
+    函数式编程
+  </div>
+  <div
+    v-click
+    absolute w-100 h-100 left-85 top-25 border="~ amber rounded-full"
+    bg-amber:20 text-3xl text-amber flex="~ items-center justify-center"
+  >
+    类型理论
+  </div>
+</div>
 
 ---
 
@@ -71,7 +151,7 @@ _Kerman @ USTC Solvay
 
 看起来用处不大？
 
-```coq
+```coq {*}{class:'!children:text-lg'}
 Inductive day : Type :=
   | monday
   | tuesday
@@ -82,9 +162,9 @@ Inductive day : Type :=
   | sunday.
 ```
 
-<div h-5 />
+<div h-2 />
 
-<span v-click text-xl v-mark.red.cross>Enumerate?</span>
+<span v-click text-xl v-mark.red.cross>Enumerate: 枚举?</span>
 
 <div v-click text-xl>
 
@@ -96,10 +176,28 @@ Inductive day : Type :=
 
 # 从枚举类型开始
 
-函数 / 映射 / “定义”
+函数 / 映射 / “定义” {.!op100}
 
-```coq
-Definition next_weekday (d:day) : day :=
+<div relative flex flex-cols gap-6>
+
+```cpp {*}{class:'!children:text-[16px]'}
+// C++
+day next_day(day d) {
+  switch (d) {
+    case monday: return tuesday;
+    case tuesday: return wednesday;
+    case wednesday: return thursday;
+    case thursday: return friday;
+    case friday: return monday;
+    case saturday: return monday;
+    case sunday: return monday;
+  }
+}
+```
+
+```coq {*}{class:'!children:text-[16px] !children:h-full'}
+(* Coq *)
+Definition next_weekday (d: day) : day :=
   match d with
   | monday ⇒ tuesday
   | tuesday ⇒ wednesday
@@ -111,7 +209,7 @@ Definition next_weekday (d:day) : day :=
   end.
 ```
 
-类型！
+</div>
 
 ---
 
@@ -119,31 +217,42 @@ Definition next_weekday (d:day) : day :=
 
 从枚举开始的数据表示法：布尔值
 
-```coq
+```coq {*}{class:'!children:text-[18px]'}
 Inductive bool : Type :=
   | true
   | false.
 ```
 
-<div h-2 />
+<div mt-2 grid grid-cols-3 gap-3>
 
-```coq
-Definition negb (b:bool) : bool :=
+```coq {*}{class:'!children:text-[16px]'}
+Definition negb
+    (b:bool) : bool :=
   match b with
   | true ⇒ false
   | false ⇒ true
   end.
-Definition andb (b1:bool) (b2:bool) : bool :=
+```
+
+```coq {*}{class:'!children:text-[16px]'}
+Definition andb
+    (b1 b2:bool) : bool :=
   match b1 with
   | true ⇒ b2
   | false ⇒ false
   end.
-Definition orb (b1:bool) (b2:bool) : bool :=
+```
+
+```coq {*}{class:'!children:text-[16px]'}
+Definition orb
+    (b1 b2:bool) : bool :=
   match b1 with
   | true ⇒ true
   | false ⇒ b2
   end.
 ```
+
+</div>
 
 ---
 
@@ -151,10 +260,10 @@ Definition orb (b1:bool) (b2:bool) : bool :=
 
 从枚举开始的数据表示法：自然数，基于皮亚诺公理
 
-```coq
+```coq {*}{class:'!children:text-[16px]'}
 Inductive nat : Type :=
-  | O
-  | S (n : nat).  (* S 是 successor 的缩写 *)
+  | O             (* 0 *)
+  | S (n : nat).  (* n 的后继(Successor) *)
 ```
 
 <v-click>
@@ -1436,11 +1545,14 @@ Check () (*: ex ev *).
 ```
 
 ---
-layout: two-cols
+layout: iframe-right
+url: https://softwarefoundations.cis.upenn.edu/lf-current/deps.html
+scale: 0.58
 ---
 
-
 # Further Reading
+
+本次分享的内容只是 Coq 的冰山一角
 
 <div />
 
@@ -1450,14 +1562,22 @@ layout: two-cols
 <img w-80 src="https://softwarefoundations.cis.upenn.edu/common/media/image/lf_icon.jpg">
 </a>
 
-::right::
+---
 
-<Transform class="w-[300%] h-[240%] -mx-30 -mt-20" scale="0.5">
-<iframe w-full h-full src="https://softwarefoundations.cis.upenn.edu/lf-current/deps.html" />
-</Transform>
+# 题外话
+
+### [Coq]{.font-mono} 的名字由来
+
+Coq 主要在 INRIA开发，一些法国计算机科学家有用动物命名软件的传统：像 Caml、Elan、Foc、Phox 都心照不宣地遵循这种默契。在法国，“Coq”是雄鸡，发音也像构造演算 （Calculus of Constructions）的首字母缩写（CoC），它是 Coq 的基础。高卢雄鸡是法国的象征。C-o-q 还是 Thierry Coquand 名字的前三个字母， 他是 Coq 的早期开发者之一。
 
 ---
 layout: end
 ---
 
-Thanks
+Thanks {.text-3xl.font-mono}
+
+<div absolute font-mono right-10 bottom-4 class="!text-[18px]">
+
+_Kerman @ USTC Solvay
+
+</div>

@@ -1,12 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useSlideContext, useNav } from '@slidev/client'
 import lz from 'lz-string'
+
 const props = defineProps({
   code: {
     type: String,
     required: true
   }
 })
+
+const { isPrintMode, currentPage } = useNav()
+const { $renderContext, $page } = useSlideContext()
 
 const replaceMap = {
   '∀': 'forall',
@@ -40,22 +45,12 @@ const style = computed(() => {
   }
 })
 
-const loaded = ref(false)
-onMounted(() => {
-  setTimeout(() => {
-    loaded.value = true
-  }, 3000);
+const editable = computed(() => {
+  return ['slide', 'presenter'].includes($renderContext.value) && !isPrintMode.value && Math.abs(currentPage.value - $page.value) < 2
 })
 </script>
 
 <template>
-  <RenderWhen context="main">
-    <iframe :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" tabindex="-1" />
-    <div data-waitfor=".loaded">
-      <div class=".loaded" v-show="loaded"/>
-    </div>
-    <template #fallback>
-      <pre :style="style" class="overflow-y-auto leading-[20px] text-[14.6px]">{{ code }}</pre>
-    </template>
-  </RenderWhen>
+  <iframe v-if="editable" :src="url" frameborder="0" :style border="2 gray-900 rounded-lg" tabindex="-1" />
+  <pre v-else :style="style" class="overflow-y-auto leading-[20px] text-[14.6px]">{{ code }}</pre>
 </template>
