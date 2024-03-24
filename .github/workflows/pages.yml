@@ -42,7 +42,9 @@ jobs:
       - name: Build
         run: pnpm build --base /coq-intro/
       - name: Install Editor Deps
-        run: npm i
+        run: |
+          rm -rf ./node_modules
+          npm i
         working-directory: ./editor
       - name: Copy editor
         run: cp -r ./editor ./slides/dist/editor
